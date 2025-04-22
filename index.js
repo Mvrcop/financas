@@ -22,21 +22,18 @@ app.post("/webhook", async (req, res) => {
   }
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content:
-            "Você é um assistente financeiro sarcástico e empático. Ajude o usuário a refletir sobre seus gastos com inteligência emocional e ironia, mas sem ser cruel.",
+   const completion = {
+  data: {
+    choices: [
+      {
+        message: {
+          content: `🧠 Simulação GPT: Você disse "${userMessage}". E eu, como um assistente financeiro sarcástico, diria: talvez cortar o cafezinho não resolva sua vida financeira, mas é um começo dramático.`,
         },
-        {
-          role: "user",
-          content: userMessage,
-        },
-      ],
-      temperature: 0.75,
-    });
+      },
+    ],
+  },
+};
+
 
     const gptResponse = completion.choices[0].message.content;
     return res.json({ reply: gptResponse });
