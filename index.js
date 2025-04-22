@@ -21,29 +21,31 @@ app.post("/webhook", async (req, res) => {
     return res.status(400).json({ error: "Mensagem vazia" });
   }
 
-try {
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o", // <- o nome correto do modelo!
-    messages: [
-      {
-        role: "system",
-        content: "Você é um assistente financeiro sarcástico e empático. Ajude o usuário a refletir sobre seus gastos com inteligência emocional e ironia, mas sem ser cruel."
-      },
-      {
-        role: "user",
-        content: userMessage
-      }
-    ],
-    temperature: 0.75
-  });
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content:
+            "Você é um assistente financeiro sarcástico e empático. Ajude o usuário a refletir sobre seus gastos com inteligência emocional e ironia, mas sem ser cruel.",
+        },
+        {
+          role: "user",
+          content: userMessage,
+        },
+      ],
+      temperature: 0.75,
+    });
 
-  const gptResponse = completion.choices[0].message.content;
-  return res.json({ reply: gptResponse });
+    const gptResponse = completion.choices[0].message.content;
+    return res.json({ reply: gptResponse });
 
-} catch (err) {
-  console.error(err);
-  return res.status(500).json({ error: "Erro ao gerar resposta" });
-}
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Erro ao gerar resposta" });
+  }
+});
 
 app.get("/", (_, res) => {
   res.send("Servidor Lovable + GPT funcionando.");
