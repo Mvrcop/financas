@@ -22,23 +22,28 @@ app.post("/webhook", async (req, res) => {
   }
 
   try {
-   const completion = {
-  data: {
-    choices: [
-      {
-        message: {
-          content: `🧠 Simulação GPT: Você disse "${userMessage}". E eu, como um assistente financeiro sarcástico, diria: talvez cortar o cafezinho não resolva sua vida financeira, mas é um começo dramático.`,
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content:
+            "Você é um assistente financeiro sarcástico e empático. Ajude o usuário a refletir sobre seus gastos com inteligência emocional e ironia, mas sem ser cruel.",
         },
-      },
-    ],
-  },
-};
+        {
+          role: "user",
+          content: userMessage,
+        },
+      ],
+      temperature: 0.75,
+    });
 
-    const gptResponse = completion?.choices?.[0]?.message?.content || "Erro: resposta vazia ou inesperada da OpenAI.";
+    console.log("Resposta bruta da OpenAI:", completion);
+
+    const gptResponse = completion?.choices?.[0]?.message?.content || "Não consegui entender sua solicitação.";
     return res.json({ reply: gptResponse });
-
   } catch (err) {
-    console.error(err);
+    console.error("Erro ao gerar resposta:", err);
     return res.status(500).json({ error: "Erro ao gerar resposta" });
   }
 });
@@ -48,5 +53,5 @@ app.get("/", (_, res) => {
 });
 
 app.listen(port, () => {
-  console.log("Resposta bruta da OpenAI:", completion);
+  console.log(`Servidor rodando na porta ${port}`);
 });
