@@ -34,8 +34,7 @@ app.post("/webhook", async (req, res) => {
   },
 };
 
-
-    const gptResponse = completion.choices[0].message.content;
+    const gptResponse = completion?.choices?.[0]?.message?.content || "Erro: resposta vazia ou inesperada da OpenAI.";
     return res.json({ reply: gptResponse });
 
   } catch (err) {
@@ -49,5 +48,5 @@ app.get("/", (_, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+  console.log("Resposta bruta da OpenAI:", completion);
 });
